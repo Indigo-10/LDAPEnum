@@ -4,10 +4,8 @@ import ldap3
 def create_ldap_connection(username, password, domain, ip_address, unauthenticated, tld):
     server = ldap3.Server(ip_address)
     if unauthenticated:
-        # Unauthenticated bind
         connection = ldap3.Connection(server, user=None, password=None, authentication=ldap3.ANONYMOUS)
     else:
-        # Authenticated bind
         user_dn = f"CN={username},CN=Users,DC={domain},DC={tld}"  
         connection = ldap3.Connection(server, user=user_dn, password=password)
     
@@ -32,9 +30,7 @@ def parse_arguments():
 def main():
     args = parse_arguments()
    
-
-    # Set the domain for the search base
-    search_base = f"DC={args.domain},DC={args.tld}"  # Adjust for domain
+    search_base = f"DC={args.domain},DC={args.tld}" 
 
     connection = create_ldap_connection(args.username, args.password, args.domain, args.ip, args.unauthenticated, args.tld)
 
@@ -55,7 +51,7 @@ def main():
                     print(f"Computer: {entry.cn}")
                 if entry.objectSid:
                     print(f"SID: {entry.objectSid}")
-                print()  # Empty line between entries
+                print()
     else:
         print("Failed to bind to the server")
 
